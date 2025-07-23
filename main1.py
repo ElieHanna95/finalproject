@@ -11,7 +11,7 @@ ANSI_COLORS = {
     "yellow": "\033[93m",
     "cyan": "\033[96m",
     "magenta": "\033[95m",
-    "reset": "\033[0m"
+    "reset": "\033[0m",
 }
 
 
@@ -22,7 +22,9 @@ def deco(color):
             result = func(*args, **kwargs)
             print(ANSI_COLORS["reset"], end="")
             return result
+
         return wrapper
+
     return decorator
 
 
@@ -37,54 +39,59 @@ class FileReader:
     @filename.setter
     def filename(self, value):
         self._filename = value
+
     def line_generator(self):
-        with open(self._filename, 'r', encoding = 'utf-8') as file:
+        with open(self._filename, "r", encoding="utf-8") as file:
             for line in file:
-                yield line.rstrip('\n')
+                yield line.rstrip("\n")
+
     @staticmethod
     def count_lines(filename):
-        with open(filename, 'r', encoding= 'utf-8') as f:
+        with open(filename, "r", encoding="utf-8") as f:
             return sum(1 for _ in f)
+
     @classmethod
     def from_string(cls, content, outfilename):
-        with open(outfilename, 'w', encoding= 'utf-8') as f:
+        with open(outfilename, "w", encoding="utf-8") as f:
             f.write(content)
         return cls(outfilename)
+
     def __str__(self):
         lines = []
-        with open(self._filename, 'r', encoding='utf-8') as f:
+        with open(self._filename, "r", encoding="utf-8") as f:
             for i, line in enumerate(f):
                 if i >= 3:
                     break
-                lines.append(line.rstrip('\n'))
+                lines.append(line.rstrip("\n"))
         return "\n".join(lines)
+
     def __add__(self, other):
         base1 = os.path.basename(self._filename)
         base2 = os.path.basename(other._filename)
         dir1 = os.path.dirname(self._filename)
         new_file = os.path.join(dir1, f"{base1}_plus_{base2}.txt")
-        with open(new_file, 'w', encoding='utf-8') as fout, \
-                open(self._filename, 'r', encoding='utf-8') as f1, \
-                open(other._filename, 'r', encoding='utf-8') as f2:
+        with open(new_file, "w", encoding="utf-8") as fout, open(
+            self._filename, "r", encoding="utf-8"
+        ) as f1, open(other._filename, "r", encoding="utf-8") as f2:
             fout.writelines(f1.readlines() + f2.readlines())
         return FileReader(new_file)
 
     def concat_files(self, *filenames):
-        with open(self._filename, 'a', encoding='utf-8') as fout:
+        with open(self._filename, "a", encoding="utf-8") as fout:
             for fname in filenames:
-                with open(fname, 'r', encoding='utf-8') as fin:
+                with open(fname, "r", encoding="utf-8") as fin:
                     fout.write(fin.read())
-   
-    
-class UpperCaseFileReader(FileReader):
-        def line_generator(self):
-            with open(self._filename, 'r', encoding='utf-8') as file:
-                for line in file:
-                    yield line.rstrip('\n').upper()
-        def __str__(self):
-            with open(self._filename, 'r', encoding='utf-8') as f:
-                return f.read().upper()
 
+
+class UpperCaseFileReader(FileReader):
+    def line_generator(self):
+        with open(self._filename, "r", encoding="utf-8") as file:
+            for line in file:
+                yield line.rstrip("\n").upper()
+
+    def __str__(self):
+        with open(self._filename, "r", encoding="utf-8") as f:
+            return f.read().upper()
 
 
 @deco("cyan")
@@ -99,10 +106,13 @@ def show_countdown(seconds):
         else:
             color = "red"
         sys.stdout.write(" " * 40 + "\r")  # clear old line
-        sys.stdout.write(f"{ANSI_COLORS[color]}Time left: {sec} second{'s' if sec != 1 else ''}{ANSI_COLORS['reset']}\r")
+        sys.stdout.write(
+            f"{ANSI_COLORS[color]}Time left: {sec} second{'s' if sec != 1 else ''}{ANSI_COLORS['reset']}\r"
+        )
         sys.stdout.flush()
         time.sleep(1)
     print(f"{ANSI_COLORS['magenta']}Time's up!{ANSI_COLORS['reset']}")
+
 
 if __name__ == "__main__":
     try:
@@ -110,4 +120,3 @@ if __name__ == "__main__":
         show_countdown(seconds)
     except ValueError:
         print(f"{ANSI_COLORS['red']}Invalid input!{ANSI_COLORS['reset']}")
-
