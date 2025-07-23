@@ -80,9 +80,3 @@ class FileReader:
         def __str__(self):
             with open(self._filename, 'r', encoding='utf-8') as f:
                 return f.read().upper()
-
-
-
-
-
-
