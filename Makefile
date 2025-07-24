@@ -2,10 +2,6 @@
 
 test:
 	pytest Test_main1.py
-venv:
-	python -m venv venv
-	.venv\Scripts\activate
-
 
 format:
 	black .
