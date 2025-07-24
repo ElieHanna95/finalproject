@@ -27,8 +27,8 @@ def deco(color):
 
 class UpperCaseFileReader(FileReader):
     def __init__(self, filename):
-        self._filename = filename
-
+        #self._filename = filename
+        super().__init__(filename)
     def line_generator(self):
         with open(self._filename, "r", encoding="utf-8") as file:
             for line in file:
