@@ -1,7 +1,8 @@
 .PHONY: test format lint run
 
 test:
-	pytest
+	pytest Test_main1.py
+
 
 format:
 	black .
